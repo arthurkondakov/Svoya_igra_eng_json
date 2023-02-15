@@ -19,26 +19,40 @@ with open ("quastion.json", "w") as file:
         }
     }
     file.write(json.dumps(quastion))
-
+tru_answer_user = 0
+false_qnswer_user = 0
+sum_coins = 0
 def show_table():
     with open ("quastion.json", "r") as file:
         title = json.loads(file.read())
         for category in title:
             print(category, end=" ")
             for point in title[category]:
-                print(point, end=" ")
+                if title[category][point]["asked"] == "False":
+                    print(point, end=" ")
+                else:
+                    print("   ", end='')
             print("\n")
 def show_answer_user(list):
     with open ("quastion.json", "r") as file:
         title = json.loads(file.read())
-        print(title[list[0]][list[1]]["quastion"])
+        return (title[list[0]][list[1]]["quastion"])
 
 
 def show_split_answer(answer):
     list = (answer.split(" "))
     return list
 
+def show_coins(list, answer_user):
+    with open ("quastion.json", "r") as file:
+        title = json.loads(file.read())
+        if answer_user == title[list[0]][list[1]]["answer"]:
+            print(f"Ответ правильный! Ты получаешь {list[1]} очков")
+        else:
+            print("Ответ не верный")
 show_table()
 answer = input("Выберите категорию и количество баллов\n")
 show_split_answer(answer)
-show_answer_user(show_split_answer(answer))
+word = show_answer_user(show_split_answer(answer))
+answer_user = input(f"В переводе: {word} - означает:\n")
+show_coins(show_split_answer(answer), answer_user)
