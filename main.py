@@ -1,58 +1,72 @@
 import json
 
-with open ("quastion.json", "w") as file:
-    quastion = {
+quastion = {
         "Транспорт": {
             "100": {"quastion":"plane", "answer":"самолет", "asked":"False"},
             "200": {"quastion":"train", "answer":"поезд", "asked":"False"},
             "300": {"quastion":"boarding", "answer": "посадка", "asked": "False"},
-        },
-        "Животные": {
-            "100": {"quastion": "dog", "answer": "собака", "asked": "False"},
-            "200": {"quastion": "shark", "answer": "акула", "asked": "False"},
-            "300": {"quastion": "table", "answer": "стол", "asked": "False"},
-        },
-        "Еда": {
-            "100": {"quastion": "apple", "answer": "яблоко", "asked": "False"},
-            "200": {"quastion": "tomato", "answer": "помидор", "asked": "False"},
-            "300": {"quastion": "banana", "answer": "банан", "asked": "False"},
         }
+        # "Животные": {
+        #     "100": {"quastion": "dog", "answer": "собака", "asked": "False"},
+        #     "200": {"quastion": "shark", "answer": "акула", "asked": "False"},
+        #     "300": {"quastion": "table", "answer": "стол", "asked": "False"},
+        # },
+        # "Еда": {
+        #     "100": {"quastion": "apple", "answer": "яблоко", "asked": "False"},
+        #     "200": {"quastion": "tomato", "answer": "помидор", "asked": "False"},
+        #     "300": {"quastion": "banana", "answer": "банан", "asked": "False"},
+        # }
     }
-    file.write(json.dumps(quastion))
-tru_answer_user = 0
-false_qnswer_user = 0
-sum_coins = 0
+tru = 0
+fal = 0
+sum_ = 0
 def show_table():
-    with open ("quastion.json", "r") as file:
-        title = json.loads(file.read())
-        for category in title:
+        for category in quastion:
             print(category, end=" ")
-            for point in title[category]:
-                if title[category][point]["asked"] == "False":
+            for point in quastion[category]:
+                if quastion[category][point]["asked"] == "False":
                     print(point, end=" ")
                 else:
                     print("   ", end='')
             print("\n")
 def show_answer_user(list):
-    with open ("quastion.json", "r") as file:
-        title = json.loads(file.read())
-        return (title[list[0]][list[1]]["quastion"])
+        return (quastion[list[0]][list[1]]["quastion"])
 
 
 def show_split_answer(answer):
     list = (answer.split(" "))
     return list
 
-def show_coins(list, answer_user):
-    with open ("quastion.json", "r") as file:
-        title = json.loads(file.read())
-        if answer_user == title[list[0]][list[1]]["answer"]:
-            print(f"Ответ правильный! Ты получаешь {list[1]} очков")
-        else:
-            print("Ответ не верный")
+def show_count_quastion():
+    sum_quastion = 0
+    for categ in quastion:
+        for point in quastion[categ]:
+            sum_quastion += 1
+    return sum_quastion
+def show_finish(sum_, tru, fal):
+    with open ("coint.json", "w") as file:
+        coins = [sum_,tru, fal]
+        file.write(json.dumps(coins))
+    print(f"Сумма очков {sum_}")
+    print(f"Всего верных ответов {tru}")
+    print(f"Нерпавильных ответов {fal}")
 show_table()
-answer = input("Выберите категорию и количество баллов\n")
-show_split_answer(answer)
-word = show_answer_user(show_split_answer(answer))
-answer_user = input(f"В переводе: {word} - означает:\n")
-show_coins(show_split_answer(answer), answer_user)
+count = show_count_quastion()
+while  count > 0:
+    answer = input("Выберите категорию и количество баллов\n")
+    show_split_answer(answer)
+    word = show_answer_user(show_split_answer(answer))
+    answer_user = input(f"В переводе: {word} - означает:\n")
+    # show_coins(show_split_answer(answer), answer_user)
+    if answer_user == quastion[show_split_answer(answer)[0]][show_split_answer(answer)[1]]["answer"]:
+        print(f"Ответ правильный! Ты получаешь {show_split_answer(answer)[1]} очков")
+        quastion[show_split_answer(answer)[0]][show_split_answer(answer)[1]]["asked"] = "True"
+        sum_ += int(show_split_answer(answer)[1])
+        tru += 1
+    else:
+        quastion[show_split_answer(answer)[0]][show_split_answer(answer)[1]]["asked"] = "True"
+        print(f"Ответ не верный, правильный ответ {quastion[show_split_answer(answer)[0]][show_split_answer(answer)[1]]['answer']}")
+        fal += 1
+    show_table()
+    count -= 1
+show_finish(sum_,tru,fal)
