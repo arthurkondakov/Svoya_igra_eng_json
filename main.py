@@ -53,6 +53,7 @@ def show_finish(sum_, tru, fal):
     print(f"Всего верных ответов {tru}")
     print(f"Нерпавильных ответов {fal}")
 
+
 show_table()
 count = show_count_quastion()
 while count > 0:
